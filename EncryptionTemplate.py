@@ -107,9 +107,18 @@ class PlaceholderEntry(ttk.Entry):
 # -----------------------
 # Crypto
 # -----------------------
-def rot13(text: str) -> str:
-    return codecs.encode(text, "rot_13")
-
+def rot18(text: str) -> str:
+    result = []
+    for char in text:
+        if 'a' <= char <= 'z':  # lowercase letters
+            result.append(chr((ord(char) - ord('a') + 13) % 26 + ord('a')))
+        elif 'A' <= char <= 'Z':  # uppercase letters
+            result.append(chr((ord(char) - ord('A') + 13) % 26 + ord('A')))
+        elif '0' <= char <= '9':  # digits
+            result.append(chr((ord(char) - ord('0') + 5) % 10 + ord('0')))
+        else:  # non-alphanumeric stay the same
+            result.append(char)
+    return ''.join(result)
 
 # -----------------------
 # App Shell with Frame Switching
@@ -348,7 +357,7 @@ class MedicalFormFrame(ttk.Frame):
             return
 
         block = self._compose_block()
-        encrypted = rot13(block)
+        encrypted = rot18(block)
         self.controller.show("ResultFrame", text=encrypted, mode="encrypted")
 
 
@@ -394,7 +403,7 @@ class ResultFrame(ttk.Frame):
         if self.mode != "encrypted":
             cur = self._get_current()
             self.text.delete("1.0", "end")
-            self.text.insert("1.0", rot13(cur))
+            self.text.insert("1.0", rot18(cur))
             self.mode = "encrypted"
             self._update_status()
 
@@ -402,7 +411,7 @@ class ResultFrame(ttk.Frame):
         if self.mode != "decrypted":
             cur = self._get_current()
             self.text.delete("1.0", "end")
-            self.text.insert("1.0", rot13(cur))
+            self.text.insert("1.0", rot18(cur))
             self.mode = "decrypted"
             self._update_status()
 
