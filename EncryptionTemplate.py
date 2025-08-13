@@ -126,7 +126,7 @@ def rot18(text: str) -> str:
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("CareCipher — ROT13 Medical Encryptor")
+        self.title("CareCipher — ROT18 Medical Encryptor")
         self.geometry("860x600")
         self.minsize(820, 560)
         self.resizable(True, True)
